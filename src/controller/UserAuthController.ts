@@ -40,7 +40,7 @@ export class UserAuthController {
     const auth = await this.userAuthUtils.existAuth(cpf)
 
     if (auth.created && auth.user) {
-      const isValidPassword = await bcrypt.compare(auth.user.password, password)
+      const isValidPassword = await bcrypt.compare(password, auth.user.password)
       if (!isValidPassword)
         throw new ApolloError('Ops! Senha inválida, verifique e tente novamente', 'WRONG_PASSWORD') 
       

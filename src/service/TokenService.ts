@@ -16,10 +16,15 @@ export class TokenService {
     userId: string,
     type: TokenKind
   ): Promise<Token> {
+    const expiresIn = 
+    type == TokenKind.AUTHENTICATE ?  '4 hrs' :
+    type == TokenKind.REFRESH ? '30 days'
+          : '15 days'
+    console.log({ expiresIn })
     const token = jwt.sign({
       userId,
       type
-    }, process.env.APP_SECRET || '')
+    }, process.env.APP_SECRET || '', { expiresIn: expiresIn})
     return this.context.prisma.token.create({
       data: {
         userAuthId: userId,
