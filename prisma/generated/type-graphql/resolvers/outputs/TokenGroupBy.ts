@@ -38,6 +38,11 @@ export class TokenGroupBy {
   })
   updatedAt!: Date;
 
+  @TypeGraphQL.Field(_type => String, {
+    nullable: true
+  })
+  userAuthId!: string | null;
+
   @TypeGraphQL.Field(_type => TokenCountAggregate, {
     nullable: true
   })

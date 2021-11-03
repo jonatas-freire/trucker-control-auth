@@ -6,6 +6,8 @@ import { DateTimeFilter } from "../inputs/DateTimeFilter";
 import { EnumTokenKindFilter } from "../inputs/EnumTokenKindFilter";
 import { IntFilter } from "../inputs/IntFilter";
 import { StringFilter } from "../inputs/StringFilter";
+import { StringNullableFilter } from "../inputs/StringNullableFilter";
+import { UserAuthRelationFilter } from "../inputs/UserAuthRelationFilter";
 
 @TypeGraphQL.InputType({
   isAbstract: true
@@ -50,4 +52,14 @@ export class TokenWhereInput {
     nullable: true
   })
   updatedAt?: DateTimeFilter | undefined;
+
+  @TypeGraphQL.Field(_type => UserAuthRelationFilter, {
+    nullable: true
+  })
+  UserAuth?: UserAuthRelationFilter | undefined;
+
+  @TypeGraphQL.Field(_type => StringNullableFilter, {
+    nullable: true
+  })
+  userAuthId?: StringNullableFilter | undefined;
 }

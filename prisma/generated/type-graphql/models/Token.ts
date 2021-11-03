@@ -2,6 +2,7 @@ import * as TypeGraphQL from "type-graphql";
 import * as GraphQLScalars from "graphql-scalars";
 import { Prisma } from "@prisma/client";
 import { DecimalJSScalar } from "../scalars";
+import { UserAuth } from "../models/UserAuth";
 import { TokenKind } from "../enums/TokenKind";
 
 @TypeGraphQL.ObjectType({
@@ -32,4 +33,11 @@ export class Token {
     nullable: false
   })
   updatedAt!: Date;
+
+  UserAuth?: UserAuth | null;
+
+  @TypeGraphQL.Field(_type => String, {
+    nullable: true
+  })
+  userAuthId?: string | null;
 }

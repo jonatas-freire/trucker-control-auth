@@ -1,11 +1,20 @@
 import { PrismaClient } from "@prisma/client";
+import { ContainerInstance } from "typedi";
 
 const prisma = new PrismaClient()
 
-export interface Context {
+export interface TContext {
+  requestId: string;
   prisma: PrismaClient
+  req: any
+  container: ContainerInstance
 }
 
-export const context: Context = {
-  prisma
+export type Context = TContext
+
+export function createContext(req: any): TContext {
+  return {
+    ...req,
+    prisma
+  }
 }

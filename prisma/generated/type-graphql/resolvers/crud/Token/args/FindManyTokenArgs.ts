@@ -35,5 +35,5 @@ export class FindManyTokenArgs {
   @TypeGraphQL.Field(_type => [TokenScalarFieldEnum], {
     nullable: true
   })
-  distinct?: Array<"id" | "token" | "type" | "createdAt" | "updatedAt"> | undefined;
+  distinct?: Array<"id" | "token" | "type" | "createdAt" | "updatedAt" | "userAuthId"> | undefined;
 }

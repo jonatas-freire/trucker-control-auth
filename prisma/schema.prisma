@@ -26,7 +26,17 @@ model Token {
   id    Int    @id @default(autoincrement())
   token String
 
-  type      TokenKind @default(AUTHENTICATE)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  type       TokenKind
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  UserAuth   UserAuth? @relation(fields: [userAuthId], references: [id])
+  userAuthId String?
+}
+
+model UserAuth {
+  id             String  @id
+  cpf            String
+  emailToRecover String
+  password       String
+  tokens         Token[]
 }

@@ -1,8 +1,14 @@
 export { AffectedRowsOutput } from "./AffectedRowsOutput";
 export { AggregateToken } from "./AggregateToken";
+export { AggregateUserAuth } from "./AggregateUserAuth";
 export { TokenAvgAggregate } from "./TokenAvgAggregate";
 export { TokenCountAggregate } from "./TokenCountAggregate";
 export { TokenGroupBy } from "./TokenGroupBy";
 export { TokenMaxAggregate } from "./TokenMaxAggregate";
 export { TokenMinAggregate } from "./TokenMinAggregate";
 export { TokenSumAggregate } from "./TokenSumAggregate";
+export { UserAuthCount } from "./UserAuthCount";
+export { UserAuthCountAggregate } from "./UserAuthCountAggregate";
+export { UserAuthGroupBy } from "./UserAuthGroupBy";
+export { UserAuthMaxAggregate } from "./UserAuthMaxAggregate";
+export { UserAuthMinAggregate } from "./UserAuthMinAggregate";

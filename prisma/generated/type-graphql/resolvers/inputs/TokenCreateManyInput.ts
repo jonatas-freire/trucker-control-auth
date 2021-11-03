@@ -19,9 +19,9 @@ export class TokenCreateManyInput {
   token!: string;
 
   @TypeGraphQL.Field(_type => TokenKind, {
-    nullable: true
+    nullable: false
   })
-  type?: "REFRESH" | "AUTHENTICATE" | "RESET" | undefined;
+  type!: "REFRESH" | "AUTHENTICATE" | "RESET";
 
   @TypeGraphQL.Field(_type => Date, {
     nullable: true
@@ -32,4 +32,9 @@ export class TokenCreateManyInput {
     nullable: true
   })
   updatedAt?: Date | undefined;
+
+  @TypeGraphQL.Field(_type => String, {
+    nullable: true
+  })
+  userAuthId?: string | undefined;
 }

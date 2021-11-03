@@ -1,11 +1,6 @@
 import 'reflect-metadata'
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Field, ID, ObjectType, registerEnumType } from 'type-graphql'
 
-export enum TokenKind {
-  REFRESH,
-  AUTHENTICATE,
-  RESET
-}
 
 @ObjectType()
 export class Token {
@@ -16,7 +11,7 @@ export class Token {
   @Field((type) => String)
   token: string
 
-  @Field(() => TokenKind)
+  @Field((type) => TokenKind)
   type: TokenKind
     
   @Field((type) => Date)
@@ -27,3 +22,16 @@ export class Token {
 
 
 }
+
+export enum TokenKind {
+  REFRESH = 'REFRESH',
+  AUTHENTICATE  = 'AUTHENTICATE',
+  RESET  = 'RESET'
+}
+
+registerEnumType(
+  TokenKind, {
+    name: 'TokenKind',
+    description: 'A type of token can be',
+  }
+)

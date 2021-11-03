@@ -5,6 +5,7 @@ import { DecimalJSScalar } from "../../scalars";
 import { DateTimeFieldUpdateOperationsInput } from "../inputs/DateTimeFieldUpdateOperationsInput";
 import { EnumTokenKindFieldUpdateOperationsInput } from "../inputs/EnumTokenKindFieldUpdateOperationsInput";
 import { StringFieldUpdateOperationsInput } from "../inputs/StringFieldUpdateOperationsInput";
+import { UserAuthUpdateOneWithoutTokensInput } from "../inputs/UserAuthUpdateOneWithoutTokensInput";
 
 @TypeGraphQL.InputType({
   isAbstract: true
@@ -29,4 +30,9 @@ export class TokenUpdateInput {
     nullable: true
   })
   updatedAt?: DateTimeFieldUpdateOperationsInput | undefined;
+
+  @TypeGraphQL.Field(_type => UserAuthUpdateOneWithoutTokensInput, {
+    nullable: true
+  })
+  UserAuth?: UserAuthUpdateOneWithoutTokensInput | undefined;
 }

@@ -32,4 +32,9 @@ export class TokenMinAggregate {
     nullable: true
   })
   updatedAt!: Date | null;
+
+  @TypeGraphQL.Field(_type => String, {
+    nullable: true
+  })
+  userAuthId!: string | null;
 }

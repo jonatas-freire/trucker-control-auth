@@ -2,12 +2,14 @@ import { ClassType } from "type-graphql";
 import * as crudResolvers from "./resolvers/crud/resolvers-crud.index";
 import * as argsTypes from "./resolvers/crud/args.index";
 import * as actionResolvers from "./resolvers/crud/resolvers-actions.index";
+import * as relationResolvers from "./resolvers/relations/resolvers.index";
 import * as models from "./models";
 import * as outputTypes from "./resolvers/outputs";
 import * as inputTypes from "./resolvers/inputs";
 
 const crudResolversMap = {
-  Token: crudResolvers.TokenCrudResolver
+  Token: crudResolvers.TokenCrudResolver,
+  UserAuth: crudResolvers.UserAuthCrudResolver
 };
 const actionResolversMap = {
   Token: {
@@ -23,10 +25,25 @@ const actionResolversMap = {
     upsertToken: actionResolvers.UpsertTokenResolver,
     aggregateToken: actionResolvers.AggregateTokenResolver,
     groupByToken: actionResolvers.GroupByTokenResolver
+  },
+  UserAuth: {
+    userAuth: actionResolvers.FindUniqueUserAuthResolver,
+    findFirstUserAuth: actionResolvers.FindFirstUserAuthResolver,
+    userAuths: actionResolvers.FindManyUserAuthResolver,
+    createUserAuth: actionResolvers.CreateUserAuthResolver,
+    createManyUserAuth: actionResolvers.CreateManyUserAuthResolver,
+    deleteUserAuth: actionResolvers.DeleteUserAuthResolver,
+    updateUserAuth: actionResolvers.UpdateUserAuthResolver,
+    deleteManyUserAuth: actionResolvers.DeleteManyUserAuthResolver,
+    updateManyUserAuth: actionResolvers.UpdateManyUserAuthResolver,
+    upsertUserAuth: actionResolvers.UpsertUserAuthResolver,
+    aggregateUserAuth: actionResolvers.AggregateUserAuthResolver,
+    groupByUserAuth: actionResolvers.GroupByUserAuthResolver
   }
 };
 const crudResolversInfo = {
-  Token: ["token", "findFirstToken", "tokens", "createToken", "createManyToken", "deleteToken", "updateToken", "deleteManyToken", "updateManyToken", "upsertToken", "aggregateToken", "groupByToken"]
+  Token: ["token", "findFirstToken", "tokens", "createToken", "createManyToken", "deleteToken", "updateToken", "deleteManyToken", "updateManyToken", "upsertToken", "aggregateToken", "groupByToken"],
+  UserAuth: ["userAuth", "findFirstUserAuth", "userAuths", "createUserAuth", "createManyUserAuth", "deleteUserAuth", "updateUserAuth", "deleteManyUserAuth", "updateManyUserAuth", "upsertUserAuth", "aggregateUserAuth", "groupByUserAuth"]
 };
 const argsInfo = {
   FindUniqueTokenArgs: ["where"],
@@ -40,7 +57,19 @@ const argsInfo = {
   UpdateManyTokenArgs: ["data", "where"],
   UpsertTokenArgs: ["where", "create", "update"],
   AggregateTokenArgs: ["where", "orderBy", "cursor", "take", "skip"],
-  GroupByTokenArgs: ["where", "orderBy", "by", "having", "take", "skip"]
+  GroupByTokenArgs: ["where", "orderBy", "by", "having", "take", "skip"],
+  FindUniqueUserAuthArgs: ["where"],
+  FindFirstUserAuthArgs: ["where", "orderBy", "cursor", "take", "skip", "distinct"],
+  FindManyUserAuthArgs: ["where", "orderBy", "cursor", "take", "skip", "distinct"],
+  CreateUserAuthArgs: ["data"],
+  CreateManyUserAuthArgs: ["data", "skipDuplicates"],
+  DeleteUserAuthArgs: ["where"],
+  UpdateUserAuthArgs: ["data", "where"],
+  DeleteManyUserAuthArgs: ["where"],
+  UpdateManyUserAuthArgs: ["data", "where"],
+  UpsertUserAuthArgs: ["where", "create", "update"],
+  AggregateUserAuthArgs: ["where", "orderBy", "cursor", "take", "skip"],
+  GroupByUserAuthArgs: ["where", "orderBy", "by", "having", "take", "skip"]
 };
 
 type ResolverModelNames = keyof typeof crudResolversMap;
@@ -149,6 +178,66 @@ export function applyArgsTypesEnhanceMap(
   }
 }
 
+const relationResolversMap = {
+  Token: relationResolvers.TokenRelationsResolver,
+  UserAuth: relationResolvers.UserAuthRelationsResolver
+};
+const relationResolversInfo = {
+  Token: ["UserAuth"],
+  UserAuth: ["tokens"]
+};
+
+type RelationResolverModelNames = keyof typeof relationResolversMap;
+
+type RelationResolverActionNames<
+  TModel extends RelationResolverModelNames
+  > = keyof typeof relationResolversMap[TModel]["prototype"];
+
+export type RelationResolverActionsConfig<TModel extends RelationResolverModelNames>
+  = Partial<Record<RelationResolverActionNames<TModel> | "_all", MethodDecorator[]>>;
+
+export type RelationResolversEnhanceMap = {
+  [TModel in RelationResolverModelNames]?: RelationResolverActionsConfig<TModel>;
+};
+
+export function applyRelationResolversEnhanceMap(
+  relationResolversEnhanceMap: RelationResolversEnhanceMap,
+) {
+  for (const relationResolversEnhanceMapKey of Object.keys(relationResolversEnhanceMap)) {
+    const modelName = relationResolversEnhanceMapKey as keyof typeof relationResolversEnhanceMap;
+    const relationResolverTarget = relationResolversMap[modelName].prototype;
+    const relationResolverActionsConfig = relationResolversEnhanceMap[modelName]!;
+    if (relationResolverActionsConfig._all) {
+      const allActionsDecorators = relationResolverActionsConfig._all;
+      const relationResolverActionNames = relationResolversInfo[modelName as keyof typeof relationResolversInfo];
+      for (const relationResolverActionName of relationResolverActionNames) {
+        for (const allActionsDecorator of allActionsDecorators) {
+          allActionsDecorator(
+            relationResolverTarget,
+            relationResolverActionName,
+            Object.getOwnPropertyDescriptor(relationResolverTarget, relationResolverActionName)!,
+          );
+        }
+      }
+    }
+    const relationResolverActionsToApply = Object.keys(relationResolverActionsConfig).filter(
+      it => it !== "_all"
+    );
+    for (const relationResolverActionName of relationResolverActionsToApply) {
+      const decorators = relationResolverActionsConfig[
+        relationResolverActionName as keyof typeof relationResolverActionsConfig
+      ] as MethodDecorator[];
+      for (const decorator of decorators) {
+        decorator(
+          relationResolverTarget,
+          relationResolverActionName,
+          Object.getOwnPropertyDescriptor(relationResolverTarget, relationResolverActionName)!,
+        );
+      }
+    }
+  }
+}
+
 type TypeConfig = {
   class?: ClassDecorator[];
   fields?: FieldsConfig;
@@ -194,7 +283,8 @@ function applyTypeClassEnhanceConfig<
 }
 
 const modelsInfo = {
-  Token: ["id", "token", "type", "createdAt", "updatedAt"]
+  Token: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
+  UserAuth: ["id", "cpf", "emailToRecover", "password"]
 };
 
 type ModelNames = keyof typeof models;
@@ -234,13 +324,19 @@ export function applyModelsEnhanceMap(modelsEnhanceMap: ModelsEnhanceMap) {
 
 const outputsInfo = {
   AggregateToken: ["_count", "_avg", "_sum", "_min", "_max"],
-  TokenGroupBy: ["id", "token", "type", "createdAt", "updatedAt", "_count", "_avg", "_sum", "_min", "_max"],
+  TokenGroupBy: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "_count", "_avg", "_sum", "_min", "_max"],
+  AggregateUserAuth: ["_count", "_min", "_max"],
+  UserAuthGroupBy: ["id", "cpf", "emailToRecover", "password", "_count", "_min", "_max"],
   AffectedRowsOutput: ["count"],
-  TokenCountAggregate: ["id", "token", "type", "createdAt", "updatedAt", "_all"],
+  TokenCountAggregate: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "_all"],
   TokenAvgAggregate: ["id"],
   TokenSumAggregate: ["id"],
-  TokenMinAggregate: ["id", "token", "type", "createdAt", "updatedAt"],
-  TokenMaxAggregate: ["id", "token", "type", "createdAt", "updatedAt"]
+  TokenMinAggregate: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
+  TokenMaxAggregate: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
+  UserAuthCount: ["tokens"],
+  UserAuthCountAggregate: ["id", "cpf", "emailToRecover", "password", "_all"],
+  UserAuthMinAggregate: ["id", "cpf", "emailToRecover", "password"],
+  UserAuthMaxAggregate: ["id", "cpf", "emailToRecover", "password"]
 };
 
 type OutputTypesNames = keyof typeof outputTypes;
@@ -281,41 +377,79 @@ export function applyOutputTypesEnhanceMap(
 }
 
 const inputsInfo = {
-  TokenWhereInput: ["AND", "OR", "NOT", "id", "token", "type", "createdAt", "updatedAt"],
-  TokenOrderByWithRelationInput: ["id", "token", "type", "createdAt", "updatedAt"],
+  TokenWhereInput: ["AND", "OR", "NOT", "id", "token", "type", "createdAt", "updatedAt", "UserAuth", "userAuthId"],
+  TokenOrderByWithRelationInput: ["id", "token", "type", "createdAt", "updatedAt", "UserAuth", "userAuthId"],
   TokenWhereUniqueInput: ["id"],
-  TokenOrderByWithAggregationInput: ["id", "token", "type", "createdAt", "updatedAt", "_count", "_avg", "_max", "_min", "_sum"],
-  TokenScalarWhereWithAggregatesInput: ["AND", "OR", "NOT", "id", "token", "type", "createdAt", "updatedAt"],
-  TokenCreateInput: ["token", "type", "createdAt", "updatedAt"],
-  TokenUpdateInput: ["token", "type", "createdAt", "updatedAt"],
-  TokenCreateManyInput: ["id", "token", "type", "createdAt", "updatedAt"],
+  TokenOrderByWithAggregationInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "_count", "_avg", "_max", "_min", "_sum"],
+  TokenScalarWhereWithAggregatesInput: ["AND", "OR", "NOT", "id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
+  UserAuthWhereInput: ["AND", "OR", "NOT", "id", "cpf", "emailToRecover", "password", "tokens"],
+  UserAuthOrderByWithRelationInput: ["id", "cpf", "emailToRecover", "password", "tokens"],
+  UserAuthWhereUniqueInput: ["id"],
+  UserAuthOrderByWithAggregationInput: ["id", "cpf", "emailToRecover", "password", "_count", "_max", "_min"],
+  UserAuthScalarWhereWithAggregatesInput: ["AND", "OR", "NOT", "id", "cpf", "emailToRecover", "password"],
+  TokenCreateInput: ["token", "type", "createdAt", "updatedAt", "UserAuth"],
+  TokenUpdateInput: ["token", "type", "createdAt", "updatedAt", "UserAuth"],
+  TokenCreateManyInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
   TokenUpdateManyMutationInput: ["token", "type", "createdAt", "updatedAt"],
+  UserAuthCreateInput: ["id", "cpf", "emailToRecover", "password", "tokens"],
+  UserAuthUpdateInput: ["id", "cpf", "emailToRecover", "password", "tokens"],
+  UserAuthCreateManyInput: ["id", "cpf", "emailToRecover", "password"],
+  UserAuthUpdateManyMutationInput: ["id", "cpf", "emailToRecover", "password"],
   IntFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not"],
   StringFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "contains", "startsWith", "endsWith", "mode", "not"],
   EnumTokenKindFilter: ["equals", "in", "notIn", "not"],
   DateTimeFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not"],
-  TokenCountOrderByAggregateInput: ["id", "token", "type", "createdAt", "updatedAt"],
+  UserAuthRelationFilter: ["is", "isNot"],
+  StringNullableFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "contains", "startsWith", "endsWith", "mode", "not"],
+  TokenCountOrderByAggregateInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
   TokenAvgOrderByAggregateInput: ["id"],
-  TokenMaxOrderByAggregateInput: ["id", "token", "type", "createdAt", "updatedAt"],
-  TokenMinOrderByAggregateInput: ["id", "token", "type", "createdAt", "updatedAt"],
+  TokenMaxOrderByAggregateInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
+  TokenMinOrderByAggregateInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
   TokenSumOrderByAggregateInput: ["id"],
   IntWithAggregatesFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not", "_count", "_avg", "_sum", "_min", "_max"],
   StringWithAggregatesFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "contains", "startsWith", "endsWith", "mode", "not", "_count", "_min", "_max"],
   EnumTokenKindWithAggregatesFilter: ["equals", "in", "notIn", "not", "_count", "_min", "_max"],
   DateTimeWithAggregatesFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not", "_count", "_min", "_max"],
+  StringNullableWithAggregatesFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "contains", "startsWith", "endsWith", "mode", "not", "_count", "_min", "_max"],
+  TokenListRelationFilter: ["every", "some", "none"],
+  TokenOrderByRelationAggregateInput: ["_count"],
+  UserAuthCountOrderByAggregateInput: ["id", "cpf", "emailToRecover", "password"],
+  UserAuthMaxOrderByAggregateInput: ["id", "cpf", "emailToRecover", "password"],
+  UserAuthMinOrderByAggregateInput: ["id", "cpf", "emailToRecover", "password"],
+  UserAuthCreateNestedOneWithoutTokensInput: ["create", "connectOrCreate", "connect"],
   StringFieldUpdateOperationsInput: ["set"],
   EnumTokenKindFieldUpdateOperationsInput: ["set"],
   DateTimeFieldUpdateOperationsInput: ["set"],
+  UserAuthUpdateOneWithoutTokensInput: ["create", "connectOrCreate", "upsert", "connect", "disconnect", "delete", "update"],
   IntFieldUpdateOperationsInput: ["set", "increment", "decrement", "multiply", "divide"],
+  NullableStringFieldUpdateOperationsInput: ["set"],
+  TokenCreateNestedManyWithoutUserAuthInput: ["create", "connectOrCreate", "createMany", "connect"],
+  TokenUpdateManyWithoutUserAuthInput: ["create", "connectOrCreate", "upsert", "createMany", "connect", "set", "disconnect", "delete", "update", "updateMany", "deleteMany"],
   NestedIntFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not"],
   NestedStringFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "contains", "startsWith", "endsWith", "not"],
   NestedEnumTokenKindFilter: ["equals", "in", "notIn", "not"],
   NestedDateTimeFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not"],
+  NestedStringNullableFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "contains", "startsWith", "endsWith", "not"],
   NestedIntWithAggregatesFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not", "_count", "_avg", "_sum", "_min", "_max"],
   NestedFloatFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not"],
   NestedStringWithAggregatesFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "contains", "startsWith", "endsWith", "not", "_count", "_min", "_max"],
   NestedEnumTokenKindWithAggregatesFilter: ["equals", "in", "notIn", "not", "_count", "_min", "_max"],
-  NestedDateTimeWithAggregatesFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not", "_count", "_min", "_max"]
+  NestedDateTimeWithAggregatesFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not", "_count", "_min", "_max"],
+  NestedStringNullableWithAggregatesFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "contains", "startsWith", "endsWith", "not", "_count", "_min", "_max"],
+  NestedIntNullableFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not"],
+  UserAuthCreateWithoutTokensInput: ["id", "cpf", "emailToRecover", "password"],
+  UserAuthCreateOrConnectWithoutTokensInput: ["where", "create"],
+  UserAuthUpsertWithoutTokensInput: ["update", "create"],
+  UserAuthUpdateWithoutTokensInput: ["id", "cpf", "emailToRecover", "password"],
+  TokenCreateWithoutUserAuthInput: ["token", "type", "createdAt", "updatedAt"],
+  TokenCreateOrConnectWithoutUserAuthInput: ["where", "create"],
+  TokenCreateManyUserAuthInputEnvelope: ["data", "skipDuplicates"],
+  TokenUpsertWithWhereUniqueWithoutUserAuthInput: ["where", "update", "create"],
+  TokenUpdateWithWhereUniqueWithoutUserAuthInput: ["where", "data"],
+  TokenUpdateManyWithWhereWithoutUserAuthInput: ["where", "data"],
+  TokenScalarWhereInput: ["AND", "OR", "NOT", "id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
+  TokenCreateManyUserAuthInput: ["id", "token", "type", "createdAt", "updatedAt"],
+  TokenUpdateWithoutUserAuthInput: ["token", "type", "createdAt", "updatedAt"]
 };
 
 type InputTypesNames = keyof typeof inputTypes;

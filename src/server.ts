@@ -3,37 +3,57 @@ import * as tq from 'type-graphql'
 import { ApolloServer } from 'apollo-server'
 import { DateTimeResolver } from 'graphql-scalars'
 import { GraphQLScalarType } from 'graphql'
-import { context } from './context'
+import { Context, createContext } from './context'
 import { TokenController } from './controller/TokenController'
-import { TokenKind } from './model/Token'
+import { UserAuthController } from './controller/UserAuthController'
+import Container, { ContainerInstance } from 'typedi'
+import { UserAuthUtils } from './service/UserAuthService'
+import { ApolloServerPlugin, GraphQLRequestContext } from 'apollo-server-plugin-base'
 
 const app = async () => {
-  tq.registerEnumType(
-    TokenKind, {
-      name: 'TokenKind'
-    }
-  )
   
   const schema = await tq.buildSchema({
     resolvers: [
-      TokenController
+      TokenController,
+      UserAuthController
     ],
     scalarsMap: [{
       type: GraphQLScalarType,
       scalar: DateTimeResolver
-    }]
+    }],
+    container: Container
   })
 
-  new ApolloServer({
+  const plugin: ApolloServerPlugin<Context> = {
+    requestDidStart(requestContext) {
+      return {
+        willSendResponse() {
+          Container.reset(requestContext.context.requestId)
+        },
+      }
+    }
+  }
+
+  const server = new ApolloServer({
     schema,
-    context: context
+    context: (params) => {
+      const requestId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+      const container = Container.of(requestId.toString());
+      const context: Context = {
+        ...createContext(params),
+        requestId: requestId.toString(),
+        container
+      }
+      Container.set("Context", context)
+      return context
+    },
+    plugins: [
+      plugin
+    ]
   })
-    .listen({ port: 4001 }, () => {
-    console.log(`
-      🚀 Server ready at: http://localhost:4000`
-    )
-  })
-
+    
+  const { url } = await server.listen(4001);
+  console.log(`Server is running, GraphQL Playground available at ${url}`);
+  
 }
-
 app()
