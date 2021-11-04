@@ -20,7 +20,7 @@ export class TokenService {
     type == TokenKind.AUTHENTICATE ?  '4 hrs' :
     type == TokenKind.REFRESH ? '30 days'
           : '15 days'
-    console.log({ expiresIn })
+
     const token = jwt.sign({
       userId,
       type

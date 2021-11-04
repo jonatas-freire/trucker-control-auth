@@ -22,10 +22,16 @@ export class UserAuthUtils {
     return user
   }
 
-  async createUserAuth(args: Prisma.UserAuthCreateInput): Promise<UserAuth> {
-    console.log({
-      args
+  async updateUserAuth(userAuthId: string, args: Prisma.UserAuthUpdateInput): Promise<UserAuth> {
+    return this.context.prisma.userAuth.update({
+      data: args,
+      where: {
+        id: userAuthId
+      }
     })
+  }
+
+  async createUserAuth(args: Prisma.UserAuthCreateInput): Promise<UserAuth> {
     return this.context.prisma.userAuth.create({
       data: args
     })

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@prisma/client": "^3.3.0",
+    "@sendgrid/mail": "^7.5.0",
     "apollo-boost": "^0.4.9",
     "apollo-server": "^3.4.0",
     "apollo-server-plugin-base": "^3.3.0",
