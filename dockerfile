@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+RUN npm i --save-dev prisma@3.3.0
+
 RUN npx prisma generate
 
 CMD npm start
