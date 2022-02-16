@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm i --save-dev @prisma/client@3.4.2
+RUN npm i --save @prisma/client@3.4.0
 
 RUN npx prisma generate
 
