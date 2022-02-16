@@ -6,7 +6,8 @@
   "author": "Jonatas Freire <dev@jonatasfreire.com.br>",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --no-notify --respawn --transpile-only src/server.ts"
+    "dev": "ts-node-dev --no-notify --respawn --transpile-only src/server.ts",
+    "start": "ts-node   src/server.ts"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
