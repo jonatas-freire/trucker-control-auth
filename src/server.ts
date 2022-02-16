@@ -6,9 +6,8 @@ import { GraphQLScalarType } from 'graphql'
 import { Context, createContext } from './context'
 import { TokenController } from './controller/TokenController'
 import { UserAuthController } from './controller/UserAuthController'
-import Container, { ContainerInstance } from 'typedi'
-import { UserAuthUtils } from './service/UserAuthService'
-import { ApolloServerPlugin, GraphQLRequestContext } from 'apollo-server-plugin-base'
+import Container from 'typedi'
+import { ApolloServerPlugin } from 'apollo-server-plugin-base'
 
 const app = async () => {
   
@@ -57,4 +56,3 @@ const app = async () => {
   
 }
 app()
-

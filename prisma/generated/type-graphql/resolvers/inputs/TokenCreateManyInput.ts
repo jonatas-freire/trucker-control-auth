@@ -2,6 +2,7 @@ import * as TypeGraphQL from "type-graphql";
 import * as GraphQLScalars from "graphql-scalars";
 import { Prisma } from "@prisma/client";
 import { DecimalJSScalar } from "../../scalars";
+import { TokenCreateManyrolesInput } from "../inputs/TokenCreateManyrolesInput";
 import { TokenKind } from "../../enums/TokenKind";
 
 @TypeGraphQL.InputType({
@@ -37,4 +38,9 @@ export class TokenCreateManyInput {
     nullable: true
   })
   userAuthId?: string | undefined;
+
+  @TypeGraphQL.Field(_type => TokenCreateManyrolesInput, {
+    nullable: true
+  })
+  roles?: TokenCreateManyrolesInput | undefined;
 }

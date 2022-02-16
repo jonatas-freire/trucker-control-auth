@@ -7,6 +7,7 @@ import { EnumTokenKindFilter } from "../inputs/EnumTokenKindFilter";
 import { IntFilter } from "../inputs/IntFilter";
 import { StringFilter } from "../inputs/StringFilter";
 import { StringNullableFilter } from "../inputs/StringNullableFilter";
+import { StringNullableListFilter } from "../inputs/StringNullableListFilter";
 
 @TypeGraphQL.InputType({
   isAbstract: true
@@ -56,4 +57,9 @@ export class TokenScalarWhereInput {
     nullable: true
   })
   userAuthId?: StringNullableFilter | undefined;
+
+  @TypeGraphQL.Field(_type => StringNullableListFilter, {
+    nullable: true
+  })
+  roles?: StringNullableListFilter | undefined;
 }

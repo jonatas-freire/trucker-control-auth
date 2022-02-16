@@ -40,4 +40,9 @@ export class Token {
     nullable: true
   })
   userAuthId?: string | null;
+
+  @TypeGraphQL.Field(_type => [String], {
+    nullable: false
+  })
+  roles!: string[];
 }

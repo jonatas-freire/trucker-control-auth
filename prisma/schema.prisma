@@ -31,6 +31,7 @@ model Token {
   updatedAt  DateTime  @updatedAt
   UserAuth   UserAuth? @relation(fields: [userAuthId], references: [id])
   userAuthId String?
+  roles      String[]
 }
 
 model UserAuth {

@@ -44,7 +44,7 @@ export class TokenService {
     const refreshToken = this.createToken(userId, TokenKind.REFRESH)
 
     const tokens = await Promise.all([authToken, refreshToken])
-
+    console.log({ tokens })
     return {
       accessToken: tokens[0].token,
       refreshToken: tokens[1].token

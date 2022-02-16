@@ -283,7 +283,7 @@ function applyTypeClassEnhanceConfig<
 }
 
 const modelsInfo = {
-  Token: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
+  Token: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "roles"],
   UserAuth: ["id", "cpf", "emailToRecover", "password"]
 };
 
@@ -324,11 +324,11 @@ export function applyModelsEnhanceMap(modelsEnhanceMap: ModelsEnhanceMap) {
 
 const outputsInfo = {
   AggregateToken: ["_count", "_avg", "_sum", "_min", "_max"],
-  TokenGroupBy: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "_count", "_avg", "_sum", "_min", "_max"],
+  TokenGroupBy: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "roles", "_count", "_avg", "_sum", "_min", "_max"],
   AggregateUserAuth: ["_count", "_min", "_max"],
   UserAuthGroupBy: ["id", "cpf", "emailToRecover", "password", "_count", "_min", "_max"],
   AffectedRowsOutput: ["count"],
-  TokenCountAggregate: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "_all"],
+  TokenCountAggregate: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "roles", "_all"],
   TokenAvgAggregate: ["id"],
   TokenSumAggregate: ["id"],
   TokenMinAggregate: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
@@ -377,20 +377,20 @@ export function applyOutputTypesEnhanceMap(
 }
 
 const inputsInfo = {
-  TokenWhereInput: ["AND", "OR", "NOT", "id", "token", "type", "createdAt", "updatedAt", "UserAuth", "userAuthId"],
-  TokenOrderByWithRelationInput: ["id", "token", "type", "createdAt", "updatedAt", "UserAuth", "userAuthId"],
+  TokenWhereInput: ["AND", "OR", "NOT", "id", "token", "type", "createdAt", "updatedAt", "UserAuth", "userAuthId", "roles"],
+  TokenOrderByWithRelationInput: ["id", "token", "type", "createdAt", "updatedAt", "UserAuth", "userAuthId", "roles"],
   TokenWhereUniqueInput: ["id"],
-  TokenOrderByWithAggregationInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "_count", "_avg", "_max", "_min", "_sum"],
-  TokenScalarWhereWithAggregatesInput: ["AND", "OR", "NOT", "id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
+  TokenOrderByWithAggregationInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "roles", "_count", "_avg", "_max", "_min", "_sum"],
+  TokenScalarWhereWithAggregatesInput: ["AND", "OR", "NOT", "id", "token", "type", "createdAt", "updatedAt", "userAuthId", "roles"],
   UserAuthWhereInput: ["AND", "OR", "NOT", "id", "cpf", "emailToRecover", "password", "tokens"],
   UserAuthOrderByWithRelationInput: ["id", "cpf", "emailToRecover", "password", "tokens"],
   UserAuthWhereUniqueInput: ["id"],
   UserAuthOrderByWithAggregationInput: ["id", "cpf", "emailToRecover", "password", "_count", "_max", "_min"],
   UserAuthScalarWhereWithAggregatesInput: ["AND", "OR", "NOT", "id", "cpf", "emailToRecover", "password"],
-  TokenCreateInput: ["token", "type", "createdAt", "updatedAt", "UserAuth"],
-  TokenUpdateInput: ["token", "type", "createdAt", "updatedAt", "UserAuth"],
-  TokenCreateManyInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
-  TokenUpdateManyMutationInput: ["token", "type", "createdAt", "updatedAt"],
+  TokenCreateInput: ["token", "type", "createdAt", "updatedAt", "roles", "UserAuth"],
+  TokenUpdateInput: ["token", "type", "createdAt", "updatedAt", "roles", "UserAuth"],
+  TokenCreateManyInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "roles"],
+  TokenUpdateManyMutationInput: ["token", "type", "createdAt", "updatedAt", "roles"],
   UserAuthCreateInput: ["id", "cpf", "emailToRecover", "password", "tokens"],
   UserAuthUpdateInput: ["id", "cpf", "emailToRecover", "password", "tokens"],
   UserAuthCreateManyInput: ["id", "cpf", "emailToRecover", "password"],
@@ -401,7 +401,8 @@ const inputsInfo = {
   DateTimeFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not"],
   UserAuthRelationFilter: ["is", "isNot"],
   StringNullableFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "contains", "startsWith", "endsWith", "mode", "not"],
-  TokenCountOrderByAggregateInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
+  StringNullableListFilter: ["equals", "has", "hasEvery", "hasSome", "isEmpty"],
+  TokenCountOrderByAggregateInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId", "roles"],
   TokenAvgOrderByAggregateInput: ["id"],
   TokenMaxOrderByAggregateInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
   TokenMinOrderByAggregateInput: ["id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
@@ -416,13 +417,16 @@ const inputsInfo = {
   UserAuthCountOrderByAggregateInput: ["id", "cpf", "emailToRecover", "password"],
   UserAuthMaxOrderByAggregateInput: ["id", "cpf", "emailToRecover", "password"],
   UserAuthMinOrderByAggregateInput: ["id", "cpf", "emailToRecover", "password"],
+  TokenCreaterolesInput: ["set"],
   UserAuthCreateNestedOneWithoutTokensInput: ["create", "connectOrCreate", "connect"],
   StringFieldUpdateOperationsInput: ["set"],
   EnumTokenKindFieldUpdateOperationsInput: ["set"],
   DateTimeFieldUpdateOperationsInput: ["set"],
+  TokenUpdaterolesInput: ["set", "push"],
   UserAuthUpdateOneWithoutTokensInput: ["create", "connectOrCreate", "upsert", "connect", "disconnect", "delete", "update"],
   IntFieldUpdateOperationsInput: ["set", "increment", "decrement", "multiply", "divide"],
   NullableStringFieldUpdateOperationsInput: ["set"],
+  TokenCreateManyrolesInput: ["set"],
   TokenCreateNestedManyWithoutUserAuthInput: ["create", "connectOrCreate", "createMany", "connect"],
   TokenUpdateManyWithoutUserAuthInput: ["create", "connectOrCreate", "upsert", "createMany", "connect", "set", "disconnect", "delete", "update", "updateMany", "deleteMany"],
   NestedIntFilter: ["equals", "in", "notIn", "lt", "lte", "gt", "gte", "not"],
@@ -441,15 +445,15 @@ const inputsInfo = {
   UserAuthCreateOrConnectWithoutTokensInput: ["where", "create"],
   UserAuthUpsertWithoutTokensInput: ["update", "create"],
   UserAuthUpdateWithoutTokensInput: ["id", "cpf", "emailToRecover", "password"],
-  TokenCreateWithoutUserAuthInput: ["token", "type", "createdAt", "updatedAt"],
+  TokenCreateWithoutUserAuthInput: ["token", "type", "createdAt", "updatedAt", "roles"],
   TokenCreateOrConnectWithoutUserAuthInput: ["where", "create"],
   TokenCreateManyUserAuthInputEnvelope: ["data", "skipDuplicates"],
   TokenUpsertWithWhereUniqueWithoutUserAuthInput: ["where", "update", "create"],
   TokenUpdateWithWhereUniqueWithoutUserAuthInput: ["where", "data"],
   TokenUpdateManyWithWhereWithoutUserAuthInput: ["where", "data"],
-  TokenScalarWhereInput: ["AND", "OR", "NOT", "id", "token", "type", "createdAt", "updatedAt", "userAuthId"],
-  TokenCreateManyUserAuthInput: ["id", "token", "type", "createdAt", "updatedAt"],
-  TokenUpdateWithoutUserAuthInput: ["token", "type", "createdAt", "updatedAt"]
+  TokenScalarWhereInput: ["AND", "OR", "NOT", "id", "token", "type", "createdAt", "updatedAt", "userAuthId", "roles"],
+  TokenCreateManyUserAuthInput: ["id", "token", "type", "createdAt", "updatedAt", "roles"],
+  TokenUpdateWithoutUserAuthInput: ["token", "type", "createdAt", "updatedAt", "roles"]
 };
 
 type InputTypesNames = keyof typeof inputTypes;

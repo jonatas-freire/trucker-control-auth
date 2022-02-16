@@ -26,7 +26,8 @@ export class Token {
 export enum TokenKind {
   REFRESH = 'REFRESH',
   AUTHENTICATE  = 'AUTHENTICATE',
-  RESET  = 'RESET'
+  RESET = 'RESET',
+  SERVICE = 'SERVICE'
 }
 
 registerEnumType(

@@ -7,6 +7,7 @@ export interface TContext {
   requestId: string;
   prisma: PrismaClient
   req: any
+  response: any
   container: ContainerInstance
 }
 

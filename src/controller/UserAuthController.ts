@@ -66,7 +66,7 @@ export class UserAuthController {
       throw new ApolloError("Não foi possivel alterar a senha", "INTERNAL_SERVER_ERROR")
     }
     
-    return this.login(updatedUserAuth.cpf, newPassword)
+    return this.login(context, updatedUserAuth.cpf, newPassword)
 
 
   }
@@ -105,6 +105,7 @@ export class UserAuthController {
   
   @Mutation((returns) => UserLogged)
   async login(
+    @Ctx() context: Context,
     @Arg("cpf") cpf: string,
     @Arg("password") password: string,
   ): Promise<UserLogged> {
@@ -118,6 +119,7 @@ export class UserAuthController {
         throw new ApolloError('Ops! Senha inválida, verifique e tente novamente', 'WRONG_PASSWORD') 
       
       const { accessToken, refreshToken } = await this.tokenService.createLoginTokens(auth.user.id)
+      
       return {
         accessToken,
         refreshToken,
@@ -143,6 +145,7 @@ export class UserAuthController {
     })
 
     const { accessToken, refreshToken } = await this.tokenService.createLoginTokens(user.id)
+    
     return {
       accessToken,
       refreshToken,

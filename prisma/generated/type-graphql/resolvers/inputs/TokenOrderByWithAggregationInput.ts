@@ -43,6 +43,11 @@ export class TokenOrderByWithAggregationInput {
   })
   userAuthId?: "asc" | "desc" | undefined;
 
+  @TypeGraphQL.Field(_type => SortOrder, {
+    nullable: true
+  })
+  roles?: "asc" | "desc" | undefined;
+
   @TypeGraphQL.Field(_type => TokenCountOrderByAggregateInput, {
     nullable: true
   })

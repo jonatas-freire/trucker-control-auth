@@ -22,6 +22,11 @@ export class UserClient {
         query: getUserByCpfQuery,
         variables: {
           cpf
+        },
+        context: {
+          headers: {
+            "Authorization": "Bearer " + process.env.SERVICE_TOKEN
+          }
         }
       })
       return response.data.getUserByCpf

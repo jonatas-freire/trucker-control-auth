@@ -23,6 +23,7 @@ export { NullableStringFieldUpdateOperationsInput } from "./NullableStringFieldU
 export { StringFieldUpdateOperationsInput } from "./StringFieldUpdateOperationsInput";
 export { StringFilter } from "./StringFilter";
 export { StringNullableFilter } from "./StringNullableFilter";
+export { StringNullableListFilter } from "./StringNullableListFilter";
 export { StringNullableWithAggregatesFilter } from "./StringNullableWithAggregatesFilter";
 export { StringWithAggregatesFilter } from "./StringWithAggregatesFilter";
 export { TokenAvgOrderByAggregateInput } from "./TokenAvgOrderByAggregateInput";
@@ -31,9 +32,11 @@ export { TokenCreateInput } from "./TokenCreateInput";
 export { TokenCreateManyInput } from "./TokenCreateManyInput";
 export { TokenCreateManyUserAuthInput } from "./TokenCreateManyUserAuthInput";
 export { TokenCreateManyUserAuthInputEnvelope } from "./TokenCreateManyUserAuthInputEnvelope";
+export { TokenCreateManyrolesInput } from "./TokenCreateManyrolesInput";
 export { TokenCreateNestedManyWithoutUserAuthInput } from "./TokenCreateNestedManyWithoutUserAuthInput";
 export { TokenCreateOrConnectWithoutUserAuthInput } from "./TokenCreateOrConnectWithoutUserAuthInput";
 export { TokenCreateWithoutUserAuthInput } from "./TokenCreateWithoutUserAuthInput";
+export { TokenCreaterolesInput } from "./TokenCreaterolesInput";
 export { TokenListRelationFilter } from "./TokenListRelationFilter";
 export { TokenMaxOrderByAggregateInput } from "./TokenMaxOrderByAggregateInput";
 export { TokenMinOrderByAggregateInput } from "./TokenMinOrderByAggregateInput";
@@ -49,6 +52,7 @@ export { TokenUpdateManyWithWhereWithoutUserAuthInput } from "./TokenUpdateManyW
 export { TokenUpdateManyWithoutUserAuthInput } from "./TokenUpdateManyWithoutUserAuthInput";
 export { TokenUpdateWithWhereUniqueWithoutUserAuthInput } from "./TokenUpdateWithWhereUniqueWithoutUserAuthInput";
 export { TokenUpdateWithoutUserAuthInput } from "./TokenUpdateWithoutUserAuthInput";
+export { TokenUpdaterolesInput } from "./TokenUpdaterolesInput";
 export { TokenUpsertWithWhereUniqueWithoutUserAuthInput } from "./TokenUpsertWithWhereUniqueWithoutUserAuthInput";
 export { TokenWhereInput } from "./TokenWhereInput";
 export { TokenWhereUniqueInput } from "./TokenWhereUniqueInput";

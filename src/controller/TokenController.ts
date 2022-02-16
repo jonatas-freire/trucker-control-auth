@@ -1,24 +1,40 @@
-import { Arg, Ctx, Int, Mutation, Query, Resolver, UseMiddleware } from "type-graphql";
+import { Arg, Ctx, Field, Int, Mutation, ObjectType, Query, Resolver, UseMiddleware } from "type-graphql";
 
 import { Token, TokenKind } from "../model/Token";
 import { Context } from "../context";
 
 import { Authenticate } from "../middleware/authenticate";
 import * as UserClient from '../client/User/UserClient'
+import { Service } from "typedi";
+
+@ObjectType()
+export class TokenValid {
+  @Field((type) => String!)
+  accessToken: string
+
+  @Field((type) => Boolean)
+  valid: boolean
+}
+
+@Service()
 @Resolver(Token)
 export class TokenController {
 
+
+
   @UseMiddleware(Authenticate)
-  @Query((returns) => Token)
-  async users(
+  @Query((returns) => TokenValid)
+  async isValidToken(
     @Ctx() ctx: Context
   ) {
-    const role = await ctx.prisma.token.findFirst()
-    if (role?.type) {
-      console.log(role?.type == TokenKind.AUTHENTICATE)
-    }
 
-    return role
+    const authHeader = ctx.req.headers.authorization
+    const token = authHeader.replace('Bearer', '').trim()
+
+    return {
+      accessToken: token,
+      valid: true
+    }
   }
 
 

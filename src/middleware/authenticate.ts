@@ -37,7 +37,7 @@ export class Authenticate implements MiddlewareInterface<TContext> {
       throw new ApolloError("Token expirado", "INVALID_TOKEN")
     }
     
-    if (!(isValidToken && isValidToken.userId)) {
+    if (!(isValidToken)) {
       throw new ApolloError("Usuário não está logado", "USER_UNAUTHENTICATED")
     }
 

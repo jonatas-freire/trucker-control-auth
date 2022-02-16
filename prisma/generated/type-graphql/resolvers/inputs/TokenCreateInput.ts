@@ -2,6 +2,7 @@ import * as TypeGraphQL from "type-graphql";
 import * as GraphQLScalars from "graphql-scalars";
 import { Prisma } from "@prisma/client";
 import { DecimalJSScalar } from "../../scalars";
+import { TokenCreaterolesInput } from "../inputs/TokenCreaterolesInput";
 import { UserAuthCreateNestedOneWithoutTokensInput } from "../inputs/UserAuthCreateNestedOneWithoutTokensInput";
 import { TokenKind } from "../../enums/TokenKind";
 
@@ -28,6 +29,11 @@ export class TokenCreateInput {
     nullable: true
   })
   updatedAt?: Date | undefined;
+
+  @TypeGraphQL.Field(_type => TokenCreaterolesInput, {
+    nullable: true
+  })
+  roles?: TokenCreaterolesInput | undefined;
 
   @TypeGraphQL.Field(_type => UserAuthCreateNestedOneWithoutTokensInput, {
     nullable: true
