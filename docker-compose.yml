@@ -5,4 +5,4 @@ services:
       context: ./
     command: npm run start
     ports:
-      - "4002:4002"
+      - "4001:4001"
