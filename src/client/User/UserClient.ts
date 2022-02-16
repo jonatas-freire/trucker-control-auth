@@ -12,7 +12,7 @@ export class UserClient {
   client: ApolloClient<unknown>
   constructor() {
     this.client = new ApolloClient({
-      uri: 'http://localhost:4000/graphql'
+      uri: process.env.USER_SERVICE
     })
   }
 
