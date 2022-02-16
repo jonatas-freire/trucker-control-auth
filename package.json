@@ -31,7 +31,7 @@
     "jsonwebtoken": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
-    "typegraphql-prisma": "^0.16.4",
+    "typegraphql-prisma": "^0.16.6",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
