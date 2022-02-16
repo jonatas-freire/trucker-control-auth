@@ -1,14 +1,12 @@
 FROM node:14.18.1
 
-WORKDIR /src/app/
+WORKDIR /app
 
 COPY ./package*.json ./ 
 
 RUN npm install
 
 COPY . .
-
-RUN npm i --save @prisma/client@3.4.0
 
 RUN npx prisma generate
 
