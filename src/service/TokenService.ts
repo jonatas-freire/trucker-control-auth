@@ -17,7 +17,7 @@ export class TokenService {
     type: TokenKind
   ): Promise<Token> {
     const expiresIn = 
-    type == TokenKind.AUTHENTICATE ?  '4 hrs' :
+    type == TokenKind.AUTHENTICATE ?  '30 days' :
     type == TokenKind.REFRESH ? '30 days'
           : '15 days'
 
