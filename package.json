@@ -13,10 +13,10 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^3.4.0",
+    "@prisma/client": "^3.4.2",
     "@sendgrid/mail": "^7.5.0",
     "apollo-boost": "^0.4.9",
-    "apollo-server": "^3.4.0",
+    "apollo-server": "^3.5.0",
     "apollo-server-plugin-base": "^3.3.0",
     "bcrypt": "^5.0.1",
     "class-validator": "^0.13.1",
@@ -31,6 +31,7 @@
     "jsonwebtoken": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
+    "typegraphql-prisma": "^0.16.4",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
@@ -44,7 +45,6 @@
     "prisma": "^3.3.0",
     "ts-node": "^10.4.0",
     "ts-node-dev": "^1.1.8",
-    "typegraphql-prisma": "^0.16.4",
     "typescript": "^4.4.4"
   }
 }
