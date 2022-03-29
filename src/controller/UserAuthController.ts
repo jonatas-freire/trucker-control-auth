@@ -113,6 +113,8 @@ export class UserAuthController {
 
     const auth = await this.userAuthUtils.existAuth(cpf)
 
+    console.log({ auth })
+
     if (auth.created && auth.user) {
       const isValidPassword = await bcrypt.compare(password, auth.user.password)
       if (!isValidPassword)
@@ -126,7 +128,7 @@ export class UserAuthController {
         isTemporallyPassword: auth.user.emailToRecover == "",
       }
     }
-
+    console.log("chamou")
     const { user, permission } = await this.userAuthUtils.existUserAndPermission(cpf, 'SYSTEM')
     if (!user) 
       throw new ApolloError('Ops! Usuário não encontrado.', 'USER_NOT_FOUND')

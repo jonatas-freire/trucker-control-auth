@@ -29,8 +29,10 @@ export class UserClient {
           }
         }
       })
+      console.log({ response })
       return response.data.getUserByCpf
-    } catch {
+    } catch (e) {
+      console.log({ e })
       throw new ApolloError('Usuário não foi encontrado', 'USER_NOT_FOUND')
     }
   }

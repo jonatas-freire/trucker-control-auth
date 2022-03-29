@@ -19,6 +19,7 @@ export class UserAuthUtils {
 
   async existUser(cpf: string): Promise<User | null> {
     const user = await this.userClient.getByCpf(cpf)
+    console.log({ user })
     return user
   }
 
@@ -39,6 +40,7 @@ export class UserAuthUtils {
 
   async existUserAndPermission(cpf: string, accessType: string): Promise<{ user: User | null, permission: boolean }> {
     const user = await this.existUser(cpf)
+    console.log({ user })
     if (accessType == 'SYSTEM' && user && user.systemAccess) {
       return { user, permission: true }
     }
@@ -51,12 +53,17 @@ export class UserAuthUtils {
   }
 
   async existAuth(cpf: string): Promise<{ user?: UserAuth | null, created: boolean }> {
+    console.log({ 
+      cpf,
 
+    })
     const userAuth = await this.context.prisma.userAuth.findFirst({
       where: {
         cpf
       }
     })
+
+    console.log({ userAuth })
     return { created: userAuth != null, user: userAuth }
   }
 }

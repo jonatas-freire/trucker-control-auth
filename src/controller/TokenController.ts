@@ -27,10 +27,10 @@ export class TokenController {
   async isValidToken(
     @Ctx() ctx: Context
   ) {
-
+    
     const authHeader = ctx.req.headers.authorization
     const token = authHeader.replace('Bearer', '').trim()
-
+    console.log({ authHeader, token })
     return {
       accessToken: token,
       valid: true
